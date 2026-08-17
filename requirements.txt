@@ -1,0 +1,37 @@
+# ==========================================
+# DANK ENGINE STUDIO - DEPENDENCIES
+# ==========================================
+
+# Core UI & Web Scraping
+customtkinter>=5.2.2
+selenium>=4.15.0
+beautifulsoup4>=4.12.0
+aiohttp>=3.9.0
+aiofiles>=23.2.1
+
+# Computer Vision & Image Processing
+opencv-python>=4.8.0
+Pillow>=10.0.0
+
+# Audio & Video Utilities
+numpy<2.0.0
+moviepy>=1.0.3
+pydub>=0.25.1
+tqdm>=4.66.0
+
+# AI APIs & Text to Speech
+openai>=1.12.0
+edge-tts>=6.1.9
+
+# RVC Dependencies & Bug Fixes
+# Note: coverage and numba must be upgraded to fix RVC initialization bugs
+coverage>=7.4.0
+numba>=0.59.0
+rvc-python>=1.0.0
+
+# ==========================================
+# CRITICAL GPU NOTE:
+# PyTorch MUST be installed manually via the index URL to get CUDA acceleration.
+# Run this BEFORE installing this requirements.txt:
+# pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 --default-timeout=1000
+# ==========================================
