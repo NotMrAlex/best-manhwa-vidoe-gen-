@@ -1,0 +1,50 @@
+{
+  "systemSetup": [
+    {
+      "name": "Install pip",
+      "command": "curl -fsSL https://bootstrap.pypa.io/get-pip.py | python3 - --user --break-system-packages"
+    },
+    {
+      "name": "Install FFmpeg",
+      "command": "curl -fsSL https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz -o /tmp/ffmpeg-static.tar.xz && tar -xJf /tmp/ffmpeg-static.tar.xz -C /tmp && cp /tmp/ffmpeg-*-amd64-static/ffmpeg /tmp/ffmpeg-*-amd64-static/ffprobe /usr/local/bin/ && rm -rf /tmp/ffmpeg-static.tar.xz /tmp/ffmpeg-*-amd64-static"
+    }
+  ],
+  "templateName": "custom",
+  "projectDependencies": [
+    {
+      "name": "Install Python Dependencies",
+      "command": "python3 -m pip install --user --break-system-packages -r requirements.txt"
+    }
+  ],
+  "codeChecks": [
+    {
+      "name": "Compile Check",
+      "command": "python3 -m py_compile engine.py"
+    }
+  ],
+  "buildSteps": [],
+  "runStep": [
+    {
+      "name": "Run Engine",
+      "command": "PORT=3000 python3 engine.py",
+      "port": "3000"
+    }
+  ],
+  "deploySteps": [],
+  "cleanupFiles": [
+    "__pycache__",
+    "build",
+    "output",
+    "output_panels",
+    "audio",
+    "assets",
+    "config.json"
+  ],
+  "packageManager": "pip",
+  "envPaths": [
+    {
+      "name": "default",
+      "path": ".env"
+    }
+  ]
+}
