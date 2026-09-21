@@ -12,7 +12,7 @@ CONFIG_FILE = "config.json"
 
 DEFAULT_CONFIG = {
     "engine_settings": {
-        "fps": 60,
+        "fps": 30,
         "workers": 6,
         "ffmpeg_threads": "4",
         "profile": "final",

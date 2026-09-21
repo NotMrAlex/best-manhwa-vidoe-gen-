@@ -71,6 +71,15 @@ def run_pipeline(args, cfg, logger):
     segment_size = clamp_size(args.segment_size or es.get("segment_size", 10))
     profile = args.profile or es.get("profile", "final")
 
+    if workers > 1:
+        cpu = os.cpu_count() or 4
+        cap = max(1, (cpu * 2) // workers)
+        if int(ffmpeg_threads) > cap:
+            logger.info("Auto-cap: ffmpeg_threads %s -> %d "
+                        "(%d workers on %d cores)", ffmpeg_threads, cap,
+                        workers, cpu)
+            ffmpeg_threads = str(cap)
+
     story_path = args.story
     if not os.path.exists(story_path):
         logger.error("❌ ERROR: %s not found!", story_path)

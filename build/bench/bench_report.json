@@ -1,9 +1,9 @@
 {
-  "ts": "2026-09-21T23:49:08",
-  "git_sha": "c33c471",
+  "ts": "2026-09-21T23:53:54",
+  "git_sha": "6ed0360",
   "story": "build/bench/story_bench_slice.json",
   "panels_benched": 11,
-  "wall_s": 18.18,
+  "wall_s": 17.85,
   "clips_ok": 18,
   "clips_skipped": 0,
   "clips_error": 0,
