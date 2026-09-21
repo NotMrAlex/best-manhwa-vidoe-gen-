@@ -14,6 +14,7 @@ from .config import load_config
 from .logging_setup import setup_logging
 from .manifest import Manifest
 from .render import detect_hardware, render_story
+from .segments import clamp_size
 
 log = logging.getLogger("engine.cli")
 
@@ -45,6 +46,10 @@ def build_parser():
                    help="Generate synthetic fixture assets for benchmarking")
     p.add_argument("--baseline", default=None,
                    help="Baseline dir for SSIM comparison during --bench")
+    p.add_argument("--render-mode", choices=["clips", "segments"], default=None,
+                   help="Long-form mode: per-clip (default) or 8-12 panel segments")
+    p.add_argument("--segment-size", type=int, default=None,
+                   help="Panels per segment, clamped 8-12 (segments mode only)")
     p.add_argument("--no-resume", action="store_true",
                    help="Ignore the render manifest (re-render everything)")
     p.add_argument("--skip-preflight", action="store_true",
@@ -62,6 +67,8 @@ def run_pipeline(args, cfg, logger):
     ffmpeg_threads = str(es.get("ffmpeg_threads", "4"))
     vols = cfg["audio_volumes_dB"]
     resume = bool(es.get("resume", True)) and not args.no_resume
+    render_mode = args.render_mode or es.get("render_mode", "clips")
+    segment_size = clamp_size(args.segment_size or es.get("segment_size", 10))
 
     if args.profile == "draft":
         logger.warning("Profile 'draft' arrives in Phase 1; using 'final' settings")
@@ -98,8 +105,10 @@ def run_pipeline(args, cfg, logger):
             return {"ok": False, "reason": "font_not_found", "results": []}
 
     encoder, enc_params = detect_hardware()
-    logger.info("\n🚀 ENGINE STARTED | ENCODER: %s | %d THREADS | %d FPS",
-                encoder, workers, fps)
+    logger.info("\n🚀 ENGINE STARTED | ENCODER: %s | %d THREADS | %d FPS | MODE: %s",
+                encoder, workers, fps,
+                f"{render_mode}/{segment_size}" if render_mode == "segments"
+                else render_mode)
 
     ctx = {
         "cfg": cfg, "fps": fps, "workers": workers,
@@ -107,8 +116,8 @@ def run_pipeline(args, cfg, logger):
         "encoder": encoder, "enc_params": enc_params,
         "font_path": font_path, "build_dir": args.build_dir,
         "output_dir": args.output_dir, "resume": resume,
-        "render_mode": es.get("render_mode", "clips"),
-        "segment_size": es.get("segment_size", 10),
+        "render_mode": render_mode,
+        "segment_size": segment_size,
         "manifest": Manifest(os.path.join(args.build_dir, "manifest.json")),
     }
 

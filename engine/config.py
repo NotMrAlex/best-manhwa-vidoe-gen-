@@ -19,6 +19,7 @@ DEFAULT_CONFIG = {
         "resume": True,
         "preflight": True,
         "render_mode": "clips",
+        "segment_size": 10,
     },
     "audio_volumes_dB": {
         "voice": 3.0,

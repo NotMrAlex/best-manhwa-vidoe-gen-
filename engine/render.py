@@ -1,4 +1,4 @@
-"""Per-clip rendering loop (per-clip mode is first-class; segments in Phase 1)."""
+"""Per-clip rendering loop (per-clip mode is first-class; segment mode in segments.py)."""
 
 import functools
 import logging
