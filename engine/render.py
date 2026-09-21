@@ -11,7 +11,7 @@ from pathlib import Path
 from . import assets
 from . import audio as audio_mod
 from . import captions as captions_mod
-from . import motion, stitch
+from . import motion, segments, stitch
 from .manifest import make_key
 
 log = logging.getLogger("engine.render")
@@ -125,6 +125,13 @@ def process_clip(task, ctx):
         return {"status": "error", "msg": f"FFmpeg failed on {pid} ({aspect}): {e.stderr}"}
 
 
+def process_task(task, ctx):
+    """Route a job to the per-clip or segment renderer."""
+    if task.get("kind") == "segment":
+        return segments.render_segment(task, ctx)
+    return process_clip(task, ctx)
+
+
 def render_story(story, langs, bg_file, ctx):
     """Render all languages, then stitch. Mirrors legacy main() flow exactly."""
     from tqdm import tqdm
@@ -142,24 +149,45 @@ def render_story(story, langs, bg_file, ctx):
         jobs = []
         long_clips = []
         shorts_groups = {}
+        render_mode = ctx.get("render_mode", "clips")
 
+        if render_mode == "segments":
+            plan = segments.plan_segments(story, ctx.get("segment_size", 10))
+            for idx, seg_items in enumerate(plan):
+                jobs.append({"kind": "segment", "items": seg_items,
+                             "lang": lang, "bg": bg_file, "seg_idx": idx})
+                long_clips.append(os.path.join(
+                    build_dir, segments.segment_name(lang, idx)))
+            for item in story:
+                if not item.get("render"):
+                    continue
+                pid = f"{item['page']}_{item['panel']}"
+                short_id = item.get("shorts")
+                if isinstance(short_id, int) and short_id > 0:
+                    jobs.append({"item": item, "lang": lang, "bg": bg_file,
+                                 "aspect": "9:16"})
+                    shorts_groups.setdefault(short_id, []).append(
+                        os.path.join(build_dir, f"{lang}_916_{pid}.mp4"))
+        else:
+            for item in story:
+                if not item.get("render"):
+                    continue
+                pid = f"{item['page']}_{item['panel']}"
+
+                jobs.append({"item": item, "lang": lang, "bg": bg_file, "aspect": "16:9"})
+                long_clips.append(os.path.join(build_dir, f"{lang}_169_{pid}.mp4"))
+
+                short_id = item.get("shorts")
+                if isinstance(short_id, int) and short_id > 0:
+                    jobs.append({"item": item, "lang": lang, "bg": bg_file, "aspect": "9:16"})
+                    shorts_groups.setdefault(short_id, []).append(
+                        os.path.join(build_dir, f"{lang}_916_{pid}.mp4"))
+
+        voice_paths = []
         for item in story:
             if not item.get("render"):
                 continue
             pid = f"{item['page']}_{item['panel']}"
-
-            jobs.append({"item": item, "lang": lang, "bg": bg_file, "aspect": "16:9"})
-            long_clips.append(os.path.join(build_dir, f"{lang}_169_{pid}.mp4"))
-
-            short_id = item.get("shorts")
-            if isinstance(short_id, int) and short_id > 0:
-                jobs.append({"item": item, "lang": lang, "bg": bg_file, "aspect": "9:16"})
-                shorts_groups.setdefault(short_id, []).append(
-                    os.path.join(build_dir, f"{lang}_916_{pid}.mp4"))
-
-        voice_paths = []
-        for t in jobs:
-            pid = f"{t['item']['page']}_{t['item']['panel']}"
             p = assets.find_asset(f"audio/{lang}", pid, assets.AUDIO_EXTS)
             if p:
                 voice_paths.append(p)
@@ -167,7 +195,7 @@ def render_story(story, langs, bg_file, ctx):
 
         with ThreadPoolExecutor(max_workers=ctx["workers"]) as executor:
             results = list(tqdm(
-                executor.map(functools.partial(process_clip, ctx=ctx), jobs),
+                executor.map(functools.partial(process_task, ctx=ctx), jobs),
                 total=len(jobs), desc="Rendering", unit="clip", colour="green"))
             for res in results:
                 if res["status"] == "error":

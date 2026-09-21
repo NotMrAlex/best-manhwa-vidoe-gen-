@@ -70,9 +70,9 @@ def build_segment_graph(members, lang, ctx, fps):
               "".join(f"[bg{i}]" for i in range(k))]
     for i, m in enumerate(members):
         vparts.append(build_video_filter(
-            m["item"], m["panel_img"], "16:9", m["dur"], counts[i], fps,
+            m["item"], m["panel_img"], "16:9", m["dur"], counts[i] + 15, fps,
             src=f"{1 + i}:v", out=f"v{i}", bg=f"bg{i}",
-            bg_chain=False, exact=True))
+            bg_chain=False, exact=True, trim_seconds=counts[i] / fps))
     vparts.append("".join(f"[v{i}]" for i in range(k)) +
                   f"concat=n={k}:v=1:a=0[vcat]")
 

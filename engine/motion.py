@@ -9,15 +9,19 @@ from . import assets
 
 def build_video_filter(item, panel_img, aspect, dur, frames, fps,
                        src="1:v", out="outv", bg="0:v",
-                       bg_chain=True, exact=False):
+                       bg_chain=True, exact=False, trim_seconds=None):
     """Builds the [out] filter chain. Identical math to the legacy engine.
 
     src/out/bg: stream labels (without brackets) for the panel image input,
     the final output, and the background input.
     bg_chain:   emit the [0:v]scale->[bg] preamble (False when the caller
                 supplies a pre-scaled, per-panel split bg stream).
-    exact:      append trim=end_frame + setpts so the chain emits exactly
-                `frames` frames (required for concat in segment mode).
+    exact:      append trim=duration + setpts so the chain covers exactly
+                `trim_seconds` seconds (default frames/fps) — required for
+                concat in segment mode. Time-based (not frame-count) so it
+                matches `-t` semantics at any output frame rate. `frames`
+                still calibrates the zoom ease so the motion trajectory
+                matches the legacy per-clip path.
     """
     is_shorts = (aspect == "9:16")
     panel_num = int(item.get('panel', 1))
@@ -33,8 +37,9 @@ def build_video_filter(item, panel_img, aspect, dur, frames, fps,
 
     src_l = f"[{src}]"
     if exact:
+        secs = trim_seconds if trim_seconds is not None else frames / fps
         tail = f"[_{out}_pre]"
-        suffix = (f";[_{out}_pre]trim=end_frame={frames},"
+        suffix = (f";[_{out}_pre]trim=duration={secs:.6f},"
                   f"setpts=PTS-STARTPTS[{out}]")
     else:
         tail = f"[{out}]"

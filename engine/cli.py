@@ -107,6 +107,8 @@ def run_pipeline(args, cfg, logger):
         "encoder": encoder, "enc_params": enc_params,
         "font_path": font_path, "build_dir": args.build_dir,
         "output_dir": args.output_dir, "resume": resume,
+        "render_mode": es.get("render_mode", "clips"),
+        "segment_size": es.get("segment_size", 10),
         "manifest": Manifest(os.path.join(args.build_dir, "manifest.json")),
     }
 
