@@ -1,0 +1,88 @@
+{
+  "ts": "2026-09-21T23:06:56",
+  "git_sha": "f72a85e",
+  "story": "build/bench/story_bench_slice.json",
+  "panels_benched": 11,
+  "wall_s": 20.1,
+  "clips_ok": 18,
+  "clips_skipped": 0,
+  "clips_error": 0,
+  "errors": [],
+  "gates": {
+    "decode_clean": {
+      "pass": true,
+      "errors": {}
+    },
+    "durations": {
+      "pass": true,
+      "checked": 18,
+      "mismatches": {}
+    },
+    "captions_burned": {
+      "pass": true,
+      "yellow_pixels": 26031
+    },
+    "ssim_vs_baseline": {
+      "clips": {
+        "compared": 7,
+        "missing": [],
+        "no_baseline": [
+          "english_169_9000_1.mp4",
+          "english_169_9001_1.mp4",
+          "english_169_9002_1.mp4",
+          "english_169_9003_1.mp4",
+          "english_169_9004_1.mp4",
+          "english_169_9005_1.mp4",
+          "english_169_9007_1.mp4",
+          "english_169_9008_1.mp4",
+          "english_169_9009_1.mp4",
+          "english_169_9010_1.mp4",
+          "english_169_9011_1.mp4"
+        ],
+        "min": 1.0,
+        "mean": 1.0,
+        "files": {
+          "english_916_9000_1.mp4": {
+            "ssim": 1.0
+          },
+          "english_916_9001_1.mp4": {
+            "ssim": 1.0
+          },
+          "english_916_9002_1.mp4": {
+            "ssim": 1.0
+          },
+          "english_916_9003_1.mp4": {
+            "ssim": 1.0
+          },
+          "english_916_9004_1.mp4": {
+            "ssim": 1.0
+          },
+          "english_916_9005_1.mp4": {
+            "ssim": 1.0
+          },
+          "english_916_9007_1.mp4": {
+            "ssim": 1.0
+          }
+        },
+        "pass": true
+      },
+      "output": {
+        "compared": 2,
+        "missing": [],
+        "no_baseline": [],
+        "min": 1.0,
+        "mean": 1.0,
+        "files": {
+          "english/shorts/short_1.mp4": {
+            "ssim": 1.0
+          },
+          "english/shorts/short_2.mp4": {
+            "ssim": 1.0
+          }
+        },
+        "pass": true
+      }
+    }
+  },
+  "pass": true
+}

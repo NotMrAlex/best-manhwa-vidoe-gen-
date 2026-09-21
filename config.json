@@ -1,0 +1,13 @@
+{
+    "engine_settings": {
+        "fps": 60,
+        "workers": 6,
+        "ffmpeg_threads": "4"
+    },
+    "audio_volumes_dB": {
+        "voice": 3.0,
+        "sfx": -2.0,
+        "transition": 0.0,
+        "bgm": -18.0
+    }
+}

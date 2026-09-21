@@ -1,0 +1,125 @@
+{
+  "story": [
+    {
+      "render": true,
+      "page": 9000,
+      "panel": 1,
+      "shorts": 1,
+      "narration_english": "Panel 0 drops into the neon city as our hero laughs at danger once more.",
+      "animation": "zoom_in",
+      "sfx": "boom",
+      "transition": "swoosh",
+      "plot_summary": "synthetic benchmark fixture"
+    },
+    {
+      "render": true,
+      "page": 9001,
+      "panel": 1,
+      "shorts": 1,
+      "narration_english": "Panel 1 drops into the neon city as our hero laughs at danger once more.",
+      "animation": "zoom_out",
+      "sfx": "none",
+      "transition": "none",
+      "plot_summary": "synthetic benchmark fixture"
+    },
+    {
+      "render": true,
+      "page": 9002,
+      "panel": 1,
+      "shorts": 1,
+      "narration_english": "Panel 2 drops into the neon city as our hero laughs at danger once more.",
+      "animation": "scroll",
+      "sfx": "none",
+      "transition": "none",
+      "plot_summary": "synthetic benchmark fixture"
+    },
+    {
+      "render": true,
+      "page": 9003,
+      "panel": 1,
+      "shorts": 1,
+      "narration_english": "Panel 3 drops into the neon city as our hero laughs at danger once more.",
+      "animation": "zoom_in",
+      "sfx": "boom",
+      "transition": "none",
+      "plot_summary": "synthetic benchmark fixture"
+    },
+    {
+      "render": true,
+      "page": 9004,
+      "panel": 1,
+      "shorts": 2,
+      "narration_english": "Panel 4 drops into the neon city as our hero laughs at danger once more.",
+      "animation": "zoom_out",
+      "sfx": "none",
+      "transition": "swoosh",
+      "plot_summary": "synthetic benchmark fixture"
+    },
+    {
+      "render": true,
+      "page": 9005,
+      "panel": 1,
+      "shorts": 2,
+      "narration_english": "Panel 5 drops into the neon city as our hero laughs at danger once more.",
+      "animation": "scroll",
+      "sfx": "none",
+      "transition": "none",
+      "plot_summary": "synthetic benchmark fixture"
+    },
+    {
+      "render": true,
+      "page": 9007,
+      "panel": 1,
+      "shorts": 2,
+      "narration_english": "Panel 7 drops into the neon city as our hero laughs at danger once more.",
+      "animation": "zoom_out",
+      "sfx": "none",
+      "transition": "none",
+      "plot_summary": "synthetic benchmark fixture"
+    },
+    {
+      "render": true,
+      "page": 9008,
+      "panel": 1,
+      "shorts": 0,
+      "narration_english": "Panel 8 drops into the neon city as our hero laughs at danger once more.",
+      "animation": "scroll",
+      "sfx": "none",
+      "transition": "swoosh",
+      "plot_summary": "synthetic benchmark fixture"
+    },
+    {
+      "render": true,
+      "page": 9009,
+      "panel": 1,
+      "shorts": 0,
+      "narration_english": "Panel 9 drops into the neon city as our hero laughs at danger once more.",
+      "animation": "zoom_in",
+      "sfx": "boom",
+      "transition": "none",
+      "plot_summary": "synthetic benchmark fixture"
+    },
+    {
+      "render": true,
+      "page": 9010,
+      "panel": 1,
+      "shorts": 0,
+      "narration_english": "Panel 10 drops into the neon city as our hero laughs at danger once more.",
+      "animation": "zoom_out",
+      "sfx": "none",
+      "transition": "none",
+      "plot_summary": "synthetic benchmark fixture"
+    },
+    {
+      "render": true,
+      "page": 9011,
+      "panel": 1,
+      "shorts": 0,
+      "narration_english": "Panel 11 drops into the neon city as our hero laughs at danger once more.",
+      "animation": "scroll",
+      "sfx": "none",
+      "transition": "none",
+      "plot_summary": "synthetic benchmark fixture"
+    }
+  ]
+}
