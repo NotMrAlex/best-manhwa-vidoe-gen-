@@ -31,7 +31,7 @@ def build_parser():
     p.add_argument("--lang", default="all",
                    help="Language to render (e.g. english, spanish) or 'all'")
     p.add_argument("--profile", choices=["draft", "final"], default=None,
-                   help="Quality profile (draft arrives in Phase 1)")
+                   help="Quality profile: draft = fast preview encodes")
     p.add_argument("--jobs", type=int, default=None,
                    help="Parallel clip workers (overrides config workers)")
     p.add_argument("--fps", type=int, default=None,
@@ -69,9 +69,7 @@ def run_pipeline(args, cfg, logger):
     resume = bool(es.get("resume", True)) and not args.no_resume
     render_mode = args.render_mode or es.get("render_mode", "clips")
     segment_size = clamp_size(args.segment_size or es.get("segment_size", 10))
-
-    if args.profile == "draft":
-        logger.warning("Profile 'draft' arrives in Phase 1; using 'final' settings")
+    profile = args.profile or es.get("profile", "final")
 
     story_path = args.story
     if not os.path.exists(story_path):
@@ -105,10 +103,18 @@ def run_pipeline(args, cfg, logger):
             return {"ok": False, "reason": "font_not_found", "results": []}
 
     encoder, enc_params = detect_hardware()
-    logger.info("\n🚀 ENGINE STARTED | ENCODER: %s | %d THREADS | %d FPS | MODE: %s",
+    if profile == "draft":
+        fps = min(30, fps)
+        enc_params = {
+            "libx264": ["-preset", "ultrafast", "-crf", "28"],
+            "h264_nvenc": ["-preset", "p1", "-cq", "30"],
+            "h264_videotoolbox": ["-b:v", "4M"],
+        }.get(encoder, enc_params)
+    logger.info("\n🚀 ENGINE STARTED | ENCODER: %s | %d THREADS | %d FPS | "
+                "MODE: %s | %s",
                 encoder, workers, fps,
                 f"{render_mode}/{segment_size}" if render_mode == "segments"
-                else render_mode)
+                else render_mode, profile.upper())
 
     ctx = {
         "cfg": cfg, "fps": fps, "workers": workers,

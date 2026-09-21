@@ -44,17 +44,23 @@ class Manifest:
 
     def is_done(self, key, output):
         e = self._data.get(key, {})
-        return e.get("status") == "ok" and os.path.exists(output)
+        if e.get("status") != "ok" or not os.path.exists(output):
+            return False
+        # The file on disk must have been produced by THIS key — a different
+        # key (e.g. another profile) owning the same path means stale content.
+        return self._data.get("_outputs", {}).get(output) == key
 
     def mark_done(self, key, output):
         with self._lock:
             self._data[key] = {"status": "ok", "output": output,
                                "ts": int(time.time())}
+            self._data.setdefault("_outputs", {})[output] = key
 
     def mark_error(self, key, output, err):
         with self._lock:
             self._data[key] = {"status": "error", "output": output,
                                "error": str(err)[-500:], "ts": int(time.time())}
+            self._data.get("_outputs", {}).pop(output, None)
 
     def save(self):
         self.path.parent.mkdir(parents=True, exist_ok=True)
