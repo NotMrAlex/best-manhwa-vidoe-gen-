@@ -193,6 +193,67 @@ def gate_durations(clip_dir, tol=0.05):
             "mismatches": mismatches}
 
 
+def gate_segments(clip_dir, story, size, lang, tol=0.1):
+    """Each segment file's duration must equal the sum of member audio."""
+    from . import assets
+    from .segments import plan_segments, segment_name
+    plan = plan_segments(story, size)
+    mismatches = {}
+    checked = 0
+    for idx, items in enumerate(plan):
+        f = Path(clip_dir) / segment_name(lang, idx)
+        if not f.exists():
+            mismatches[f.name] = "segment file missing"
+            continue
+        exp = 0.0
+        for it in items:
+            pid = f"{it['page']}_{it['panel']}"
+            a = assets.find_asset(f"audio/{lang}", pid, assets.AUDIO_EXTS)
+            if a:
+                exp += assets.probe_duration(a)
+        try:
+            delta = abs(ffprobe_duration(f) - exp)
+        except Exception as e:
+            mismatches[f.name] = f"probe failed: {e}"
+            continue
+        checked += 1
+        if delta > tol:
+            mismatches[f.name] = f"delta {delta:.3f}s (exp {exp:.2f})"
+    return {"pass": not mismatches and checked == len(plan) and checked > 0,
+            "checked": checked, "segments_expected": len(plan),
+            "mismatches": mismatches}
+
+
+def gate_total_duration(output_dir, story, langs, tol=0.15):
+    """Stitched long_video duration must equal the sum of voice durations."""
+    from . import assets
+    mismatches = {}
+    checked = 0
+    for lang in langs:
+        out = Path(output_dir) / lang / "long_video.mp4"
+        if not out.exists():
+            continue
+        exp = 0.0
+        for it in story:
+            if not it.get("render"):
+                continue
+            a = assets.find_asset(f"audio/{lang}",
+                                  f"{it['page']}_{it['panel']}",
+                                  assets.AUDIO_EXTS)
+            if a:
+                exp += assets.probe_duration(a)
+        try:
+            delta = abs(ffprobe_duration(out) - exp)
+        except Exception as e:
+            mismatches[str(out)] = f"probe failed: {e}"
+            continue
+        checked += 1
+        if delta > tol:
+            mismatches[str(out)] = f"delta {delta:.3f}s (exp {exp:.2f})"
+    return {"pass": not mismatches and checked > 0, "checked": checked,
+            "mismatches": mismatches}
+
+
 def gate_caption_pixels(clip, t=1.0, min_pixels=150):
     """Extract a frame and verify yellow caption pixels are actually burned in."""
     from PIL import Image
@@ -245,6 +306,21 @@ def run_bench(args, cfg, logger):
     gates = {}
     gates["decode_clean"] = gate_decode_clean(clips + stitched)
     gates["durations"] = gate_durations(args.build_dir)
+    langs_in_slice = sorted({k.replace("narration_", "") for item in picked
+                             for k in item if k.startswith("narration_")})
+    if args.lang != "all":
+        langs_in_slice = [l for l in langs_in_slice if l == args.lang]
+    langs_in_slice = [l for l in langs_in_slice
+                      if Path(f"audio/{l}").exists()]
+    gates["total_duration"] = gate_total_duration(args.output_dir, picked,
+                                                  langs_in_slice)
+    es = cfg["engine_settings"]
+    if (args.render_mode or es.get("render_mode", "clips")) == "segments":
+        from .segments import clamp_size
+        size = clamp_size(args.segment_size or es.get("segment_size", 10))
+        for lang in langs_in_slice:
+            gates[f"segments_{lang}"] = gate_segments(args.build_dir, picked,
+                                                      size, lang)
     long_clips = [c for c in clips if "_169_" in c.name]
     if long_clips:
         gates["captions_burned"] = gate_caption_pixels(long_clips[0])

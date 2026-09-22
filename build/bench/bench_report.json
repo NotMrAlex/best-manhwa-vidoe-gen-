@@ -1,9 +1,9 @@
 {
-  "ts": "2026-09-21T23:53:54",
-  "git_sha": "6ed0360",
+  "ts": "2026-09-22T00:06:51",
+  "git_sha": "16e68e9",
   "story": "build/bench/story_bench_slice.json",
   "panels_benched": 11,
-  "wall_s": 17.85,
+  "wall_s": 17.92,
   "clips_ok": 18,
   "clips_skipped": 0,
   "clips_error": 0,
@@ -16,6 +16,11 @@
     "durations": {
       "pass": true,
       "checked": 18,
+      "mismatches": {}
+    },
+    "total_duration": {
+      "pass": true,
+      "checked": 1,
       "mismatches": {}
     },
     "captions_burned": {
