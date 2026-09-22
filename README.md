@@ -77,3 +77,49 @@ JSON
 }
 render: false signals the engine to completely skip processing the panel (used for scroll-padding removal).
 shorts: X groups panels together. The FFmpeg concat demuxer will extract all panels matching shorts: 1 and compile them into a 9:16
+
+---
+
+## 🚀 Render Engine: Modes, Profiles & Benchmarks
+
+`engine.py` (the Manhwa render node) is driven by `config.json` → `engine_settings` and CLI flags. Zero-arg `python engine.py` always reproduces legacy behavior.
+
+### Render modes
+- **`clips`** (default): one FFmpeg process per panel clip. First-class, fully supported.
+- **`segments`**: renders 8–12 panels per FFmpeg invocation (long-form 16:9 only; shorts stay per-clip). Amortizes process/decoder startup and holds A/V sync via cumulative frame-compensated frame counts (panel boundaries within half a frame of the audio timeline). Enable via CLI or config:
+  ```bash
+  python engine.py --render-mode segments --segment-size 10
+  ```
+  Segment renders are memory-heavy (~1 GB each at 1080p60), so a **memory guard** auto-caps concurrent segment workers to fit available RAM (shorts keep full concurrency).
+
+### Quality profiles
+- **`final`** (default): production encodes.
+- **`draft`**: fast preview encodes (x264 ultrafast/crf28, NVENC p1/cq30, fps capped at 30):
+  ```bash
+  python engine.py --profile draft
+  ```
+
+### Key CLI flags
+| Flag | Purpose |
+|---|---|
+| `--lang LANG` | Render one language instead of all |
+| `--jobs N` | Parallel workers (overrides config) |
+| `--fps N` | Output frame rate (overrides config) |
+| `--render-mode clips\|segments` | Long-form render strategy |
+| `--segment-size N` | Panels per segment (clamped 8–12) |
+| `--profile draft\|final` | Encode quality profile |
+| `--bench N --synthetic` | Benchmark an N-panel slice with quality gates |
+| `--baseline DIR` | SSIM-compare bench output against a baseline |
+| `--no-resume` | Ignore the render manifest (re-render all) |
+| `--skip-preflight` | Skip pre-render asset validation |
+
+### Resume & preflight
+- A manifest in the build dir tracks rendered clips/segments by content hash (params + input files); re-runs skip completed work in under a second. Deleting a clip re-renders only that clip.
+- Preflight validates panels, audio, background, and caption font before rendering; hard failures abort with a report in the build dir.
+- `ffmpeg_threads` is auto-capped to `2 × cores ÷ workers` to avoid thread oversubscription.
+
+### Benchmark harness
+```bash
+python engine.py --bench 12 --synthetic --baseline build/baseline
+```
+Generates synthetic fixture assets (pages ≥ 9000, never colliding with real assets), renders a deterministic story slice, and runs quality gates: decode-clean, per-clip duration vs audio, segment composition (`segments` mode), total long-video duration, caption pixel burn-in, and SSIM vs baseline (≥ 0.98). Report: `build/bench/bench_report.json`. Exit code 0 = pass.
