@@ -25,6 +25,38 @@ DEFAULT_SEGMENT_SIZE = 10
 MIN_SEGMENT_SIZE = 8
 MAX_SEGMENT_SIZE = 12
 
+# Measured peak RSS of one 1080p60 segment ffmpeg process (~920MB) + margin.
+SEGMENT_MEM_MB = 1300
+
+
+def available_mem_mb():
+    """Available system memory in MB (MemAvailable on Linux, 50% of total
+    elsewhere). None when undetectable -> caller keeps requested workers."""
+    try:
+        with open("/proc/meminfo") as f:
+            for line in f:
+                if line.startswith("MemAvailable:"):
+                    return int(line.split()[1]) // 1024
+    except OSError:
+        pass
+    try:
+        return int(os.sysconf("SC_PHYS_PAGES") * os.sysconf("SC_PAGE_SIZE")
+                   / 2 ** 20 * 0.5)
+    except (ValueError, OSError, AttributeError):
+        return None
+
+
+def worker_cap(requested, logger=None):
+    """Cap concurrent segment renders so N x SEGMENT_MEM_MB fits in memory."""
+    avail = available_mem_mb()
+    if avail is None:
+        return requested
+    cap = max(1, min(requested, avail // SEGMENT_MEM_MB))
+    if cap < requested and logger:
+        logger.info("Segments: workers %d -> %d "
+                    "(memory guard, %dMB available)", requested, cap, avail)
+    return cap
+
 
 def clamp_size(size):
     return max(MIN_SEGMENT_SIZE, min(MAX_SEGMENT_SIZE, int(size)))

@@ -168,6 +168,13 @@ def render_story(story, langs, bg_file, ctx):
                                  "aspect": "9:16"})
                     shorts_groups.setdefault(short_id, []).append(
                         os.path.join(build_dir, f"{lang}_916_{pid}.mp4"))
+            seg_jobs = [j for j in jobs if j.get("kind") == "segment"]
+            short_jobs = [j for j in jobs if j.get("kind") != "segment"]
+            # Segments are memory-heavy (~1GB each): run them in their own
+            # pool capped by the memory guard; shorts keep full concurrency.
+            pools = [(seg_jobs, ctx.get("segment_workers", ctx["workers"]),
+                      "Segments"),
+                     (short_jobs, ctx["workers"], "Clips")]
         else:
             for item in story:
                 if not item.get("render"):
@@ -182,6 +189,7 @@ def render_story(story, langs, bg_file, ctx):
                     jobs.append({"item": item, "lang": lang, "bg": bg_file, "aspect": "9:16"})
                     shorts_groups.setdefault(short_id, []).append(
                         os.path.join(build_dir, f"{lang}_916_{pid}.mp4"))
+            pools = [(jobs, ctx["workers"], "Rendering")]
 
         voice_paths = []
         for item in story:
@@ -193,17 +201,24 @@ def render_story(story, langs, bg_file, ctx):
                 voice_paths.append(p)
         assets.prescan_durations(voice_paths)
 
-        with ThreadPoolExecutor(max_workers=ctx["workers"]) as executor:
-            results = list(tqdm(
-                executor.map(functools.partial(process_task, ctx=ctx), jobs),
-                total=len(jobs), desc="Rendering", unit="clip", colour="green"))
-            for res in results:
-                if res["status"] == "error":
-                    log.error("%s", res['msg'])
-        all_results.extend(results)
+        lang_results = []
+        for pool_jobs, pool_workers, desc in pools:
+            if not pool_jobs:
+                continue
+            with ThreadPoolExecutor(max_workers=pool_workers) as executor:
+                results = list(tqdm(
+                    executor.map(functools.partial(process_task, ctx=ctx),
+                                 pool_jobs),
+                    total=len(pool_jobs), desc=desc, unit="clip",
+                    colour="green"))
+                for res in results:
+                    if res["status"] == "error":
+                        log.error("%s", res['msg'])
+            lang_results.extend(results)
+        all_results.extend(lang_results)
         ctx["manifest"].save()
 
-        skipped = sum(1 for r in results if r["status"] == "skipped")
+        skipped = sum(1 for r in lang_results if r["status"] == "skipped")
         if skipped:
             log.info("Resume: skipped %d already-rendered clips", skipped)
 

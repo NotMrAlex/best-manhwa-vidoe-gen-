@@ -9,7 +9,7 @@ import time
 from pathlib import Path
 
 from . import __version__
-from . import assets, fonts
+from . import assets, fonts, segments
 from .config import load_config
 from .logging_setup import setup_logging
 from .manifest import Manifest
@@ -80,6 +80,10 @@ def run_pipeline(args, cfg, logger):
                         workers, cpu)
             ffmpeg_threads = str(cap)
 
+    segment_workers = workers
+    if render_mode == "segments":
+        segment_workers = segments.worker_cap(workers, logger)
+
     story_path = args.story
     if not os.path.exists(story_path):
         logger.error("❌ ERROR: %s not found!", story_path)
@@ -133,6 +137,7 @@ def run_pipeline(args, cfg, logger):
         "output_dir": args.output_dir, "resume": resume,
         "render_mode": render_mode,
         "segment_size": segment_size,
+        "segment_workers": segment_workers,
         "manifest": Manifest(os.path.join(args.build_dir, "manifest.json")),
     }
 
