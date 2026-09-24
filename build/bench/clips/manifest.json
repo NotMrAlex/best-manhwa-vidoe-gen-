@@ -1,112 +1,64 @@
 {
- "c1c5b28885cd5f4c39014a2dd505d19dc8c18c43": {
+ "b85ae2fe742b260a6e52d3cf1c236447b11540e4": {
   "status": "ok",
-  "output": "build/bench/clips/english_916_9002_1.mp4",
-  "ts": 1790037328
+  "output": "build/bench/clips/english_169_seg0001.mp4",
+  "ts": 1790219599
  },
  "_outputs": {
-  "build/bench/clips/english_916_9002_1.mp4": "c1c5b28885cd5f4c39014a2dd505d19dc8c18c43",
-  "build/bench/clips/english_169_9002_1.mp4": "92b7b883b857b77f2d7f0b7262a1903c2f9ed8aa",
-  "build/bench/clips/english_169_9000_1.mp4": "e6be5ba28b83b7f0226227b8cd90991b548d4cb9",
-  "build/bench/clips/english_169_9001_1.mp4": "098edc7e6d0ae0111d9f1d016176c69575cdda01",
-  "build/bench/clips/english_916_9000_1.mp4": "748aaed0905fa7dcae870be81abe3d4baf183e5d",
-  "build/bench/clips/english_169_9003_1.mp4": "36051b99661ab6352b795c6d7f6d8c58511660e4",
-  "build/bench/clips/english_916_9001_1.mp4": "09b95214136c81b00262765ae998e05b51526e64",
-  "build/bench/clips/english_169_9004_1.mp4": "497e11cc85287fd4afd5522b96200f6fa6e6ddbc",
-  "build/bench/clips/english_916_9003_1.mp4": "e253fd663ec3969fdf9cef5fd07811416c2f22f8",
-  "build/bench/clips/english_916_9005_1.mp4": "c79f26f6387f2933bc87cd43c75b4e8c0e954012",
-  "build/bench/clips/english_169_9005_1.mp4": "3756390c81dceff1c0af91fd13884231203dd04f",
-  "build/bench/clips/english_169_9007_1.mp4": "2d16608afbcd3deee004d5d78152c9f213058afb",
-  "build/bench/clips/english_916_9004_1.mp4": "5ba97e5e5f3f24078f4edce02ae05bf83d6daa91",
-  "build/bench/clips/english_169_9008_1.mp4": "cb2b990db1709447b758d02d09b435aa1291c7e7",
-  "build/bench/clips/english_169_9009_1.mp4": "6793acdf8f54b8681b3de6f8325cf8fcd67aecd2",
-  "build/bench/clips/english_916_9007_1.mp4": "86d1bdcbaa5b45bff9c4c10d99e4ea447b9c3533",
-  "build/bench/clips/english_169_9010_1.mp4": "0631ddb3fecd9e4628d868df78049eabeefc720c",
-  "build/bench/clips/english_169_9011_1.mp4": "f88a6490270eabaf5854a5320d32f633e07596bd"
+  "build/bench/clips/english_169_seg0001.mp4": "b85ae2fe742b260a6e52d3cf1c236447b11540e4",
+  "build/bench/clips/english_169_seg0000.mp4": "1eb8438e4966954c203ded0465096881510affdc",
+  "build/bench/clips/english_169_intro.mp4": "7e161e8e02fef1d5098f03bb3a740087265e16c4",
+  "build/bench/clips/english_916_9002_1.mp4": "2ff5f166a4fc739f537ea90f7b3927516ec00b20",
+  "build/bench/clips/english_916_9005_1.mp4": "460e70aa73e5ec5b8a0fe8c020af2de4bada627a",
+  "build/bench/clips/english_916_9003_1.mp4": "2b7358c70cc64ddb557b63ac5c784d01829f3210",
+  "build/bench/clips/english_916_9000_1.mp4": "a811945ef7c4d9a67ba52ca4b9bebe7bffe9aadf",
+  "build/bench/clips/english_916_9001_1.mp4": "f6893a8e31ac5168988367be6f7a068de3ca5ef1",
+  "build/bench/clips/english_916_9004_1.mp4": "0f3cf0bcfc1a2dffbca5ff77ab3c345f467c05ff",
+  "build/bench/clips/english_916_9007_1.mp4": "e24789538dc15a79f686bb82ab160c38a7600e3f"
  },
- "92b7b883b857b77f2d7f0b7262a1903c2f9ed8aa": {
+ "1eb8438e4966954c203ded0465096881510affdc": {
   "status": "ok",
-  "output": "build/bench/clips/english_169_9002_1.mp4",
-  "ts": 1790037328
+  "output": "build/bench/clips/english_169_seg0000.mp4",
+  "ts": 1790219608
  },
- "e6be5ba28b83b7f0226227b8cd90991b548d4cb9": {
+ "7e161e8e02fef1d5098f03bb3a740087265e16c4": {
   "status": "ok",
-  "output": "build/bench/clips/english_169_9000_1.mp4",
-  "ts": 1790037329
+  "output": "build/bench/clips/english_169_intro.mp4",
+  "ts": 1790219610
  },
- "098edc7e6d0ae0111d9f1d016176c69575cdda01": {
+ "2ff5f166a4fc739f537ea90f7b3927516ec00b20": {
   "status": "ok",
-  "output": "build/bench/clips/english_169_9001_1.mp4",
-  "ts": 1790037329
+  "output": "build/bench/clips/english_916_9002_1.mp4",
+  "ts": 1790219612
  },
- "748aaed0905fa7dcae870be81abe3d4baf183e5d": {
-  "status": "ok",
-  "output": "build/bench/clips/english_916_9000_1.mp4",
-  "ts": 1790037332
- },
- "36051b99661ab6352b795c6d7f6d8c58511660e4": {
-  "status": "ok",
-  "output": "build/bench/clips/english_169_9003_1.mp4",
-  "ts": 1790037332
- },
- "09b95214136c81b00262765ae998e05b51526e64": {
-  "status": "ok",
-  "output": "build/bench/clips/english_916_9001_1.mp4",
-  "ts": 1790037332
- },
- "497e11cc85287fd4afd5522b96200f6fa6e6ddbc": {
-  "status": "ok",
-  "output": "build/bench/clips/english_169_9004_1.mp4",
-  "ts": 1790037333
- },
- "e253fd663ec3969fdf9cef5fd07811416c2f22f8": {
-  "status": "ok",
-  "output": "build/bench/clips/english_916_9003_1.mp4",
-  "ts": 1790037334
- },
- "c79f26f6387f2933bc87cd43c75b4e8c0e954012": {
+ "460e70aa73e5ec5b8a0fe8c020af2de4bada627a": {
   "status": "ok",
   "output": "build/bench/clips/english_916_9005_1.mp4",
-  "ts": 1790037335
+  "ts": 1790219613
  },
- "3756390c81dceff1c0af91fd13884231203dd04f": {
+ "2b7358c70cc64ddb557b63ac5c784d01829f3210": {
   "status": "ok",
-  "output": "build/bench/clips/english_169_9005_1.mp4",
-  "ts": 1790037335
+  "output": "build/bench/clips/english_916_9003_1.mp4",
+  "ts": 1790219614
  },
- "2d16608afbcd3deee004d5d78152c9f213058afb": {
+ "a811945ef7c4d9a67ba52ca4b9bebe7bffe9aadf": {
   "status": "ok",
-  "output": "build/bench/clips/english_169_9007_1.mp4",
-  "ts": 1790037338
+  "output": "build/bench/clips/english_916_9000_1.mp4",
+  "ts": 1790219614
  },
- "5ba97e5e5f3f24078f4edce02ae05bf83d6daa91": {
+ "f6893a8e31ac5168988367be6f7a068de3ca5ef1": {
+  "status": "ok",
+  "output": "build/bench/clips/english_916_9001_1.mp4",
+  "ts": 1790219615
+ },
+ "0f3cf0bcfc1a2dffbca5ff77ab3c345f467c05ff": {
   "status": "ok",
   "output": "build/bench/clips/english_916_9004_1.mp4",
-  "ts": 1790037338
+  "ts": 1790219615
  },
- "cb2b990db1709447b758d02d09b435aa1291c7e7": {
-  "status": "ok",
-  "output": "build/bench/clips/english_169_9008_1.mp4",
-  "ts": 1790037339
- },
- "6793acdf8f54b8681b3de6f8325cf8fcd67aecd2": {
-  "status": "ok",
-  "output": "build/bench/clips/english_169_9009_1.mp4",
-  "ts": 1790037340
- },
- "86d1bdcbaa5b45bff9c4c10d99e4ea447b9c3533": {
+ "e24789538dc15a79f686bb82ab160c38a7600e3f": {
   "status": "ok",
   "output": "build/bench/clips/english_916_9007_1.mp4",
-  "ts": 1790037340
- },
- "0631ddb3fecd9e4628d868df78049eabeefc720c": {
-  "status": "ok",
-  "output": "build/bench/clips/english_169_9010_1.mp4",
-  "ts": 1790037340
- },
- "f88a6490270eabaf5854a5320d32f633e07596bd": {
-  "status": "ok",
-  "output": "build/bench/clips/english_169_9011_1.mp4",
-  "ts": 1790037341
+  "ts": 1790219616
  }
 }

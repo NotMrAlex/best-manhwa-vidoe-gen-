@@ -92,6 +92,9 @@ shorts: X groups panels together. The FFmpeg concat demuxer will extract all pan
   ```
   Segment renders are memory-heavy (~1 GB each at 1080p60), so a **memory guard** auto-caps concurrent segment workers to fit available RAM (shorts keep full concurrency).
 
+### Intro TTS
+If `audio/{lang}/intro/` contains one audio file named `{page}_{panel}.wav` (e.g. `1_1.wav`), it is rendered with the matching panel image (`page1_panel1.jpg` + zoom motion) and prepended to the 16:9 long video. Shorts are unaffected. Auto-detected — remove the folder to disable. Works in both render modes.
+
 ### Quality profiles
 - **`final`** (default): production encodes.
 - **`draft`**: fast preview encodes (x264 ultrafast/crf28, NVENC p1/cq30, fps capped at 30):

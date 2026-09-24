@@ -55,13 +55,15 @@ def _manifest_params(ctx):
 
 def process_clip(task, ctx):
     item, lang, bg_file, aspect = task["item"], task["lang"], task["bg"], task["aspect"]
-    pid = f"{item['page']}_{item['panel']}"
+    is_intro = bool(item.get("intro"))
+    pid = "intro" if is_intro else f"{item['page']}_{item['panel']}"
     is_shorts = (aspect == "9:16")
     build_dir = ctx["build_dir"]
 
     expected_img_name = f"page{item['page']}_panel{item['panel']}"
     panel_img = assets.find_asset("output_panels", expected_img_name, assets.IMAGE_EXTS)
-    voice_audio = assets.find_asset(f"audio/{lang}", pid, assets.AUDIO_EXTS)
+    voice_audio = (task.get("voice") if is_intro else
+                   assets.find_asset(f"audio/{lang}", pid, assets.AUDIO_EXTS))
 
     if not panel_img or not voice_audio:
         return {"status": "error", "msg": f"Missing Assets for {pid} ({aspect})"}
@@ -150,6 +152,29 @@ def render_story(story, langs, bg_file, ctx):
         long_clips = []
         shorts_groups = {}
         render_mode = ctx.get("render_mode", "clips")
+
+        intro = assets.find_intro(lang)
+        if intro:
+            intro_audio, ipage, ipanel = intro
+            intro_img = assets.find_asset(
+                "output_panels", f"page{ipage}_panel{ipanel}",
+                assets.IMAGE_EXTS)
+            if intro_img:
+                intro_item = {"page": ipage, "panel": ipanel, "render": True,
+                              "animation": "zoom_in", "sfx": "none",
+                              "transition": "none", "intro": True}
+                jobs.append({"kind": "intro", "item": intro_item,
+                             "lang": lang, "bg": bg_file, "aspect": "16:9",
+                             "voice": intro_audio})
+                long_clips.append(os.path.join(
+                    build_dir, f"{lang}_169_intro.mp4"))
+                log.info("Intro found: %s (%.1fs, panel page%d_panel%d)",
+                         intro_audio, assets.probe_duration(intro_audio),
+                         ipage, ipanel)
+            else:
+                log.warning("Intro audio %s has no panel image "
+                            "(page%d_panel%d) — skipping intro",
+                            intro_audio, ipage, ipanel)
 
         if render_mode == "segments":
             plan = segments.plan_segments(story, ctx.get("segment_size", 10))

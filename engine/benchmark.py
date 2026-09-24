@@ -87,6 +87,12 @@ def generate_fixture(n=12, seed=7, langs=("english",),
         _run(["ffmpeg", "-y", "-hide_banner", "-loglevel", "error",
               "-f", "lavfi", "-i", "sine=frequency=70:duration=0.5",
               "-ar", "44100", str(sfx)])
+    for lang in langs:
+        Path(f"audio/{lang}/intro").mkdir(parents=True, exist_ok=True)
+        _run(["ffmpeg", "-y", "-hide_banner", "-loglevel", "error",
+              "-f", "lavfi", "-i", "sine=frequency=180:duration=0.8",
+              "-ar", "44100",
+              f"audio/{lang}/intro/{FIXTURE_PAGE_BASE}_1.wav"])
     tr = Path("assets/transitions/swoosh.wav")
     if not tr.exists():
         _run(["ffmpeg", "-y", "-hide_banner", "-loglevel", "error",
@@ -234,6 +240,9 @@ def gate_total_duration(output_dir, story, langs, tol=0.15):
         if not out.exists():
             continue
         exp = 0.0
+        intro = assets.find_intro(lang)
+        if intro:
+            exp += assets.probe_duration(intro[0])
         for it in story:
             if not it.get("render"):
                 continue
@@ -321,7 +330,8 @@ def run_bench(args, cfg, logger):
         for lang in langs_in_slice:
             gates[f"segments_{lang}"] = gate_segments(args.build_dir, picked,
                                                       size, lang)
-    long_clips = [c for c in clips if "_169_" in c.name]
+    long_clips = [c for c in clips
+                  if "_169_" in c.name and "intro" not in c.name]
     if long_clips:
         gates["captions_burned"] = gate_caption_pixels(long_clips[0])
     if args.baseline:

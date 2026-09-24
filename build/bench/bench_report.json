@@ -1,10 +1,10 @@
 {
-  "ts": "2026-09-22T00:35:53",
-  "git_sha": "216d9a4",
+  "ts": "2026-09-24T03:13:48",
+  "git_sha": "50efa8a",
   "story": "build/bench/story_bench_slice.json",
   "panels_benched": 11,
-  "wall_s": 16.76,
-  "clips_ok": 18,
+  "wall_s": 18.76,
+  "clips_ok": 10,
   "clips_skipped": 0,
   "clips_error": 0,
   "errors": [],
@@ -15,12 +15,18 @@
     },
     "durations": {
       "pass": true,
-      "checked": 18,
+      "checked": 7,
       "mismatches": {}
     },
     "total_duration": {
       "pass": true,
       "checked": 1,
+      "mismatches": {}
+    },
+    "segments_english": {
+      "pass": true,
+      "checked": 2,
+      "segments_expected": 2,
       "mismatches": {}
     },
     "captions_burned": {

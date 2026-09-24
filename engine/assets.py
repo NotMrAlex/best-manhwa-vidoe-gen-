@@ -28,6 +28,24 @@ def find_asset(folder_name, expected_name, valid_exts):
     return None
 
 
+def find_intro(lang):
+    """Return (audio_path, page, panel) for the intro TTS living in
+    audio/{lang}/intro/, or None. The stem follows the {page}_{panel}
+    convention (e.g. 1_1.wav); exactly one intro per language is expected."""
+    folder = Path(f"audio/{lang}/intro")
+    if not folder.exists():
+        return None
+    for f in sorted(folder.iterdir()):
+        if f.suffix.lower() not in AUDIO_EXTS:
+            continue
+        parts = f.stem.split("_")
+        if len(parts) == 2 and all(p.isdigit() for p in parts):
+            return str(f.absolute()), int(parts[0]), int(parts[1])
+        log.warning("Intro file ignored (bad name, want {page}_{panel}): %s",
+                    f.name)
+    return None
+
+
 def get_image_dims(img_path):
     """Pillow-based dims with caching (replaces per-clip ffprobe subprocess)."""
     if img_path in _dims_cache:
